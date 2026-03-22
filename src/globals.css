@@ -68,7 +68,7 @@ body {
   font-display: swap;
 }
 
-@theme {
+@theme inline {
   --font-sf-pro: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 
   --color-background: var(--background);
@@ -78,33 +78,12 @@ body {
   --color-tertiary: var(--tertiary);
   --color-quaternary: var(--quaternary);
   --color-quinary: var(--quinary);
-  --color-blend-1: var(--blend);
+  --color-blend-1: var(--blend1);
   --color-blend-2: var(--blend2);
   --color-blend-3: var(--blend3);
 
 }
 
-:root {
-  /* Font stack (mirrors @theme above for use in inline styles) */
-  --font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-
-  --navigation-height: 76px;
-
-  /* Colors */
-  --primary: #C17960;
-  --secondary: #F9B795;
-  --tertiary: #5AB39D;
-  --quaternary: #86C3B3;
-  --quinary: #D8ECE0;
-  --blend1: rgb(58, 0, 0);
-  --blend2: rgba(255, 205, 205, 0.8);
-  --blend3: rgb(109, 109, 109);
-
-  /* Surface colours */
-  --bg-subdued:     #f6f9fc;
-  --surface-border:   rgba(0, 0, 0, 0.1);
-
-}
 .heading {
   font-family: var(--font-sf-pro);
 }
