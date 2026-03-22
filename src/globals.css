@@ -2,8 +2,390 @@
 @import "tailwindcss/theme";
 @import "tailwindcss/utilities";
 
-/* Add global styles below */
-html, body, #root {
-	height: 100%;
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --foreground: #0b1220;
 }
 
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+:root {
+  /* Font stack (mirrors @theme above for use in inline styles) */
+  --font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+
+  --navigation-height: 76px;
+
+  /* Colors */
+  --primary: #C17960;
+  --secondary: #F9B795;
+  --tertiary: #5AB39D;
+  --quaternary: #86C3B3;
+  --quinary: #D8ECE0;
+  --blend1: rgb(58, 0, 0);
+  --blend2: rgba(255, 205, 205, 0.8);
+  --blend3: rgb(109, 109, 109);
+
+
+  /* Surface colours */
+  --bg-subdued:     #f6f9fc;
+  --surface-border:   rgba(0, 0, 0, 0.1);
+
+}
+
+
+[data-theme="alt"] {
+  --background: #0b1220;
+  --foreground: #e6eef8;
+  --primary: #FFB980;
+  --secondary: #F86C82;
+  --tertiary: #7A4FB5;
+  --quaternary: #F23F9B;
+  --quinary: #38254F;
+  --blend1: rgb(58, 0, 17);
+  --blend2: rgba(54, 42, 34, 0.8);
+  --blend3: rgb(74, 14, 82);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+@font-face {
+  font-family: 'SF Pro Display';
+  src: url('./SFPRODISPLAYREGULAR.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@theme {
+  --font-sf-pro: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+  --color-quaternary: var(--quaternary);
+  --color-quinary: var(--quinary);
+  --color-blend-1: var(--blend);
+  --color-blend-2: var(--blend2);
+  --color-blend-3: var(--blend3);
+
+}
+
+:root {
+  /* Font stack (mirrors @theme above for use in inline styles) */
+  --font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+
+  --navigation-height: 76px;
+
+  /* Colors */
+  --primary: #C17960;
+  --secondary: #F9B795;
+  --tertiary: #5AB39D;
+  --quaternary: #86C3B3;
+  --quinary: #D8ECE0;
+  --blend1: rgb(58, 0, 0);
+  --blend2: rgba(255, 205, 205, 0.8);
+  --blend3: rgb(109, 109, 109);
+
+  /* Surface colours */
+  --bg-subdued:     #f6f9fc;
+  --surface-border:   rgba(0, 0, 0, 0.1);
+
+}
+.heading {
+  font-family: var(--font-sf-pro);
+}
+
+.headingxl {
+  font-family: var(--font-sf-pro);
+  font-size: 2.125rem;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 640px) {
+  .headingxl { font-size: 2.5rem; }
+}
+
+@media (min-width: 940px) {
+  .headingxl {
+    font-size: 2.75rem;
+    line-height: 1.03;
+  }
+}
+
+h1.hero-section__title {
+  font-family: var(--font-sf-pro);
+  font-weight: 300;
+  /* Fluid: never below 2.125rem, never above 2.75rem */
+  font-size: max(min(6lvh, 2.75rem), 2.125rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+  max-width: 36ch;
+  text-wrap: pretty;
+  /* Grid placement */
+  grid-column: 1 / -1;
+  grid-row-start: 2;
+}
+
+@media (max-width: 639px) {
+  h1.hero-section__title { line-height: 1.03; }
+  h1.hero-section__title .hero-section__title-copy { display: none; }
+}
+
+@media (min-width: 940px) {
+  h1.hero-section__title { grid-column: 2 / -2; }
+}
+
+.hero-section__title-main {
+  font-family: var(--font-sf-pro);
+  font-style: normal;
+  color: var(--blend1)
+}
+
+/* Foreground h1: mix-blend-mode hard-light for the canvas intersection effect */
+h1.hero-section__title--foreground {
+  position: relative;
+  z-index: 2;
+  mix-blend-mode: difference;
+  color: var(--blend2)
+}
+
+h1.hero-section__title--foreground .hero-section__title-main {
+  color: var(--blend3);
+}
+
+/* Section shell */
+
+.section {
+  position: relative;
+  width: 100%;
+  background-color: var(--bg-subdued);
+}
+
+/* Page-margin inline padding that seats .section-container inside the viewport */
+.section:has(.section-container) {
+  padding-inline: 1.5rem; /* 24px — mobile */
+}
+
+@media (min-width: 640px) {
+  .section:has(.section-container) { padding-inline: 1rem; }
+}
+
+@media (min-width: 940px) {
+  /* Container is self-centring via max-width at desktop */
+  .section:has(.section-container) { padding-inline: 0; }
+}
+
+/* canvas overflow must bleed past the section boundary */
+.hero-section-container {
+  overflow: visible;
+}
+
+/* Section container (max-width centred column) */
+
+.section-container {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  margin-inline: auto;
+  padding-inline: 1.5rem; /* 24px — content-margin mobile */
+  padding-block: 3.5rem;  /* 56px — default non-hero block pad */
+  max-width: 1266px;       /* canary-layout-content-maxWidth-borders */
+}
+
+@media (min-width: 640px) {
+  .section-container {
+    padding-inline: 1rem;  /* 16px tablet */
+    padding-block: 4rem;   /* 64px tablet */
+    border-inline: 1px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+@media (min-width: 940px) {
+  .section-container {
+    padding-block: 6rem; /* 96px desktop */
+  }
+}
+
+/* Hero layout overrides (co-applied with .section-container) */
+/*
+ * position: static overrides the `position: relative` inherited from
+ * .section-container on the same div. A static element never creates a
+ * stacking context, so the foreground h1's z-index: 2 escapes into the
+ * <section>'s stacking context — placing it above the canvas (z-index: 1)
+ * so mix-blend-mode: hard-light can interact with the wave pixels below it.
+ */
+.hero-section__layout {
+  position: static;
+  display: grid;
+  align-items: center;
+  padding-block-start: 4.5rem; /* 72px — core-900 mobile */
+  padding-block-end:   5.5rem; /* 88px — core-1100 mobile */
+}
+
+@media (min-width: 640px) {
+  .hero-section__layout {
+    min-height: min(68svh, 826px);
+    padding-block: 4rem; /* 64px — core-800 tablet */
+  }
+}
+
+@media (min-width: 940px) {
+  .hero-section__layout {
+    padding-block: 2.25rem; /* 36px — core-450 desktop hero override */
+  }
+}
+
+/* 12-column sub-grid */
+
+.hero-section__layout-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: 1rem;  /* 16px — core-200 */
+  row-gap: 2rem;     /* 32px — core-400 */
+}
+
+@media (min-width: 640px) {
+  .hero-section__layout-grid { row-gap: 2.5rem; } /* 40px — core-500 */
+}
+
+/* CTA actions row */
+
+.actions {
+  position: relative;
+  z-index: 1;
+  grid-column: 1 / -1;
+  grid-row-start: 3;
+}
+
+@media (max-width: 639px) {
+  .actions { margin-top: 0.5rem; } /* 8px — core-100 */
+}
+
+@media (min-width: 940px) {
+  .actions { grid-column: 2 / -2; }
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem; /* 8px — core-100 */
+}
+
+/* Background / canvas layers */
+
+.section-background {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-section__background {
+  pointer-events: none;
+  z-index: 1;
+  /* Extend upward into the navigation bar */
+  inset: calc(-1 * var(--navigation-height)) 0 0 0;
+}
+
+/* Full-width rule lines at top/bottom of hero */
+.hero-section__fullbleed-line {
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  bottom: 0;
+  border-block-end: 1px solid var(--surface-border);
+  mix-blend-mode: multiply;
+}
+
+.hero-section__fullbleed-line--top {
+  display: none;
+  top: var(--navigation-height);
+  bottom: auto;
+}
+
+@media (min-width: 640px) {
+  .hero-section__fullbleed-line--top { display: block; }
+}
+
+/* Wave animation container hierarchy */
+
+.hero-wave-animation {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.hero-wave-animation__layout {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  max-width: 1266px;
+}
+
+.hero-wave-animation__contents {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+@media (min-width: 1264px) {
+  .hero-wave-animation__contents {
+    left: 250px;
+    width: 110%;
+  }
+}
+
+.hero-wave-animation__canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+/* Static fallback image — centred, oversize, fades out once canvas is ready */
+.hero-wave-animation__static {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: opacity 250ms linear;
+}
+
+.hero-wave-animation--drawn .hero-wave-animation__static {
+  opacity: 0;
+}
+
+.hero-wave-animation__static img {
+  width: 624px;
+  height: 975px;
+  max-width: none;
+}
+
+@media (min-width: 640px) {
+  .hero-wave-animation__static img { width: 1248px; }
+}
+
+@media (min-width: 1264px) {
+  .hero-wave-animation__static img { width: 1392px; }
+}
