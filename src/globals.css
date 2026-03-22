@@ -1,0 +1,9 @@
+@import "tailwindcss/preflight";
+@import "tailwindcss/theme";
+@import "tailwindcss/utilities";
+
+/* Add global styles below */
+html, body, #root {
+	height: 100%;
+}
+
