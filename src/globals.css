@@ -37,6 +37,8 @@
   /* Surface colours */
   --bg-subdued:     #f6f9fc;
   --surface-border:   rgba(0, 0, 0, 0.1);
+  --wave-bg:        #ffffff;
+  --wireframe-bg:   #5AB39D;
 
 }
 
@@ -49,9 +51,11 @@
   --tertiary: #7A4FB5;
   --quaternary: #F23F9B;
   --quinary: #38254F;
-  --blend1: rgb(58, 0, 17);
-  --blend2: rgba(54, 42, 34, 0.8);
-  --blend3: rgb(74, 14, 82);
+  --blend1: rgb(59, 0, 56);
+  --blend2: rgba(180, 166, 118, 0.8);
+  --blend3: rgb(109, 109, 109);
+  --wave-bg:        #ffffff;
+  --wireframe-bg:   #38254F;
 }
 
 body {
@@ -215,6 +219,11 @@ h1.hero-section__title--foreground .hero-section__title-main {
   padding-block-start: 4.5rem; /* 72px — core-900 mobile */
   padding-block-end:   5.5rem; /* 88px — core-1100 mobile */
 }
+
+/* Semi-transparent black backing behind text in hero-like sections
+   Keeps edges square (no border-radius) to match request. */
+/* background for text wrapper moved to the specific wrapper in the JSX
+   so it doesn't affect the full .section-container height. */
 
 @media (min-width: 640px) {
   .hero-section__layout {

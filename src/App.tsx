@@ -1,11 +1,16 @@
 ﻿'use client';
 
 import { Canvas, useFrame } from '@react-three/fiber';
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, createContext, useContext } from 'react';
 import * as THREE from 'three';
 import Header from './components/Header';
 import ThemeSwitcher from './components/ThemeSwitcher';
 
+// Theme context — shared across both Canvas R3F fiber trees via React context propagation
+const ThemeContext = createContext<{ isAlt: boolean; toggle: () => void }>({
+  isAlt: false,
+  toggle: () => {},
+});
 
 const MP = {
   speed:               4e-5,
@@ -395,7 +400,7 @@ void main(void) {
 const WIRE_FRAG = `
 out vec4 fragColor;
 void main() {
-  fragColor = vec4(0.55, 0.62, 0.95, 1.0);
+  fragColor = vec4(1.0, 1.0, 1.0, 1.0);
 }
 `;
 
@@ -471,7 +476,17 @@ void main() {
 // Manages an off-R3F ortho wave scene + waveTarget + post-processing pass.
 // The R3F default scene is left empty so R3F's auto-render draws nothing over us.
 function WaveScene() {
+  const { isAlt } = useContext(ThemeContext);
   const timeRef = useRef(MP.timeOffset);
+  const bgColorRef = useRef(new THREE.Color('#ffffff'));
+
+  // Sync clear color from CSS variable whenever theme changes
+  useEffect(() => {
+    const raw = getComputedStyle(document.documentElement)
+      .getPropertyValue('--wave-bg')
+      .trim();
+    if (raw) bgColorRef.current.set(raw);
+  }, [isAlt]);
 
   // off-R3F wave scene + camera 
   const waveSceneRef  = useRef<THREE.Scene>((() => new THREE.Scene())());
@@ -574,32 +589,18 @@ function WaveScene() {
     };
   }, []);
 
-  // initial palette texture load
+  // palette load + hot-swap: reacts to isAlt from ThemeContext (crosses Canvas boundary via React context)
   useEffect(() => {
     const waveMat = waveMatRef.current;
-    const tex = new THREE.TextureLoader().load('/palette1.webp');
+    const url = isAlt ? '/palette2.webp' : '/palette1.webp';
+    const prev = waveMat.uniforms.u_paletteTexture.value as THREE.Texture | null;
+    const tex = new THREE.TextureLoader().load(url);
     tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
     tex.colorSpace = THREE.SRGBColorSpace;
     waveMat.uniforms.u_paletteTexture.value = tex;
+    prev?.dispose();
     return () => { tex.dispose(); };
-  }, []);
-
-  // palette hot-swap: listen for the imperative 'palette-change' event
-  // dispatched by ThemeSwitcher so the swap works across the R3F fiber boundary
-  useEffect(() => {
-    const waveMat = waveMatRef.current;
-    function onPaletteChange(e: Event) {
-      const url = (e as CustomEvent<string>).detail;
-      const prev = waveMat.uniforms.u_paletteTexture.value as THREE.Texture | null;
-      const tex = new THREE.TextureLoader().load(url);
-      tex.wrapS = tex.wrapT = THREE.ClampToEdgeWrapping;
-      tex.colorSpace = THREE.SRGBColorSpace;
-      waveMat.uniforms.u_paletteTexture.value = tex;
-      prev?.dispose();
-    }
-    window.addEventListener('palette-change', onPaletteChange);
-    return () => window.removeEventListener('palette-change', onPaletteChange);
-  }, []);
+  }, [isAlt]);
 
   // geometry worker
   useEffect(() => {
@@ -692,7 +693,17 @@ function WaveScene() {
 // the full displacement + twist logic, so the undulating motion is visible in
 // isolation without any palette/sparkle contribution.
 function WireframeScene() {
+  const { isAlt } = useContext(ThemeContext);
   const timeRef = useRef(MP.timeOffset);
+  const bgColorRef = useRef(new THREE.Color('#0a2540'));
+
+  // Sync clear color from CSS variable whenever theme changes
+  useEffect(() => {
+    const raw = getComputedStyle(document.documentElement)
+      .getPropertyValue('--wireframe-bg')
+      .trim();
+    if (raw) bgColorRef.current.set(raw);
+  }, [isAlt]);
 
   const wireSceneRef  = useRef<THREE.Scene>((() => new THREE.Scene())());
   const wireCameraRef = useRef<THREE.OrthographicCamera>((() => {
@@ -784,7 +795,7 @@ function WireframeScene() {
     wMat.uniforms.u_resolution.value.set(width, height);
 
     gl.setRenderTarget(null);
-    gl.setClearColor(0x0a2540, 1);
+    gl.setClearColor(bgColorRef.current, 1);
     gl.clear();
     gl.render(wireSceneRef.current, wireCameraRef.current);
   }, 1);
@@ -796,11 +807,18 @@ function WireframeScene() {
 export default function StripeishHero() {
   const gpu     = useGPUCapability();
   const canDraw = gpu?.enabled ?? false;
+  const [isAlt, setIsAlt] = useState(false);
+  function toggle() {
+    const next = !isAlt;
+    setIsAlt(next);
+    if (next) document.documentElement.dataset.theme = 'alt';
+    else delete document.documentElement.dataset.theme;
+  }
   return (
-    <>
+    <ThemeContext.Provider value={{ isAlt, toggle }}>
       <Header />
       <main id="main-content">
-        <section className="hero-section-container section">
+        <section className="hero-section-container section" style={{ background: 'var(--wave-bg)' }}>
 
           {/* ── Text layer: both h1s sit here; canvas background is a sibling below ── */}
           <div className="section-container hero-section__layout">
@@ -822,7 +840,7 @@ export default function StripeishHero() {
                 <a className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm text-white hover:bg-[#4f46e5] transition-colors" href="#">
                   Github Repo
                 </a>
-                <ThemeSwitcher />
+                <ThemeSwitcher isAlt={isAlt} onToggle={toggle} />
               </div>
 
             </div>
@@ -865,19 +883,21 @@ export default function StripeishHero() {
         </section>
 
         {/* Wireframe breakdown section */}
-        <section className="hero-section-container section" style={{ background: '#0a2540' }}>
+        <section className="hero-section-container section" style={{ background: 'var(--wireframe-bg)' }}>
 
-          {/* Text layer — same container + layout classes as the hero so min-height / padding match */}
-          <div
-            className="section-container hero-section__layout"
-          >
-            <div style={{ position: 'relative', zIndex: 2 }}>
-              <h2 style={{ color: '#fff', fontFamily: 'var(--font-family)', fontSize: '1.5rem', fontWeight: 400, marginBottom: '0.5rem' }}>
-                Step 1 — Mesh motion (wireframe)
-              </h2>
-              <p style={{ color: '#8898aa', fontFamily: 'var(--font-family)', fontSize: '1rem', maxWidth: '640px' }}>
-                The same geometry and vertex shader run here — displacement and twist uniforms produce the undulating shape. No palette texture, no sparkle noise, no post-processing blur. Just the raw mesh edges.
-              </p>
+          {/* Text layer — use the same container + grid layout as the hero for symmetry */}
+          <div className="section-container hero-section__layout">
+            <div className="hero-section__layout-grid">
+              <div style={{ gridColumn: '2 / -2', position: 'relative', zIndex: 2 }}>
+                <h1 className="headingxl hero-section__title hero-section__title--foreground" style={{ color: '#ffffff', mixBlendMode: 'normal' }}>
+                  <em className="hero-section__title-main" style={{ color: '#ffffff' }}>Wireframe Mode so we can see the basic shape of the object</em>
+                </h1>
+
+                <p style={{ color: '#ffffff', fontFamily: 'var(--font-family)', fontSize: '1rem', maxWidth: '640px' }}>
+                  The same geometry and vertex shader run here — displacement and twist uniforms produce the undulating shape. How cool is that! No palette texture, no sparkle noise, no post-processing blur. Just the raw mesh edges.
+                  In wireframe mode we can see that there is quite a bit of mesh hidden by the folding of the waves and the position of the camera.
+                </p>
+              </div>
             </div>
           </div>
 
@@ -908,6 +928,6 @@ export default function StripeishHero() {
         </section>
 
       </main>
-    </>
+    </ThemeContext.Provider>
   );
 }
