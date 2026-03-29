@@ -263,6 +263,19 @@ h1.hero-section__title--foreground .hero-section__title-main {
   .hero-section__layout-grid { row-gap: 2.5rem; } /* 40px — core-500 */
 }
 
+/* Content box used by hero and other inset sections. Defaults to
+   full-width on small screens, inset to central columns at desktop
+   to match hero layout. */
+.hero-section__content {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 940px) {
+  .hero-section__content {
+    grid-column: 2 / -2;
+  }
+}
+
 /* CTA actions row */
 
 .actions {
@@ -388,4 +401,17 @@ h1.hero-section__title--foreground .hero-section__title-main {
 
 @media (min-width: 1264px) {
   .hero-wave-animation__static img { width: 1392px; }
+}
+
+/* Wireframe content should span the full 12-column grid so it uses
+   all available grid real estate. This keeps it flush with the grid
+   instead of being inset by central columns. */
+.wireframe-section__content {
+  grid-column: 1 / -1;
+}
+
+@media (min-width: 940px) {
+  .wireframe-section__content {
+    grid-column: 1 / -1;
+  }
 }

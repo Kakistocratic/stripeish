@@ -892,7 +892,7 @@ export default function StripeishHero() {
           {/* Text layer — use the same container + grid layout as the hero for symmetry */}
           <div className="section-container hero-section__layout">
             <div className="hero-section__layout-grid">
-              <div style={{ gridColumn: '2 / -2', position: 'relative', zIndex: 2, backgroundColor: 'rgba(0,0,0,0.30)', padding: '1.5rem' }}>
+              <div className="hero-section__content bg-black/30 p-6 relative z-20">
                 <h1 className="headingxl hero-section__title hero-section__title--foreground" style={{ color: '#ffffff', mixBlendMode: 'normal' }}>
                   <em className="hero-section__title-main" style={{ color: '#ffffff' }}>Wireframe Mode so we can see the basic shape of the object</em>
                 </h1>
