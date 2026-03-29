@@ -5,6 +5,10 @@ import { useRef, useEffect, useState, createContext, useContext } from 'react';
 import * as THREE from 'three';
 import Header from './components/Header';
 import ThemeSwitcher from './components/ThemeSwitcher';
+import desktopFallbackWebp from './fallbacks/wave-fallback-desktop.webp';
+import tabletFallbackWebp from './fallbacks/wave-fallback-tablet.webp';
+import mobileFallbackWebp from './fallbacks/wave-fallback-mobile.webp';
+import placeholderFallbackPng from './fallbacks/placeholderSourceStripeishHero.png';
 
 // Theme context — shared across both Canvas R3F fiber trees via React context propagation
 const ThemeContext = createContext<{ isAlt: boolean; toggle: () => void }>({
@@ -869,10 +873,10 @@ export default function StripeishHero() {
                   )}
                   <div className="hero-wave-animation__static">
                     <picture>
-                      <source srcSet="/StripeishHero/fallbacks/wave-fallback-desktop.webp" media="(min-width: 1264px)" type="image/webp" />
-                      <source srcSet="/StripeishHero/fallbacks/wave-fallback-tablet.webp" media="(min-width: 640px) and (max-width: 1263px)" type="image/webp" />
-                      <source srcSet="/StripeishHero/fallbacks/wave-fallback-mobile.webp" media="(max-width: 639px)" type="image/webp" />
-                      <img src="/StripeishHero/fallbacks/wave-fallback-desktop.png" alt="" aria-hidden="true" />
+                      <source srcSet={desktopFallbackWebp} media="(min-width: 1264px)" type="image/webp" />
+                      <source srcSet={tabletFallbackWebp} media="(min-width: 640px) and (max-width: 1263px)" type="image/webp" />
+                      <source srcSet={mobileFallbackWebp} media="(max-width: 639px)" type="image/webp" />
+                      <img src={placeholderFallbackPng} alt="" aria-hidden="true" />
                     </picture>
                   </div>
                 </div>
