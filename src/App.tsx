@@ -841,7 +841,7 @@ export default function StripeishHero() {
               </h1>
 
               <div className="actions isolate z-50 flex items-center gap-4">
-                <a className="inline-flex items-center gap-2 rounded-md bg-tertiary px-6 py-2.5 text-base text-white transition-colors" href="https://github.com/Kakistocratic/stripeish">
+                <a className="inline-flex items-center justify-center text-center gap-2 rounded-md bg-tertiary px-6 py-2.5 text-base text-white transition-colors" href="https://github.com/Kakistocratic/stripeish">
                   Github Repo
                 </a>
                 <ThemeSwitcher isAlt={isAlt} onToggle={toggle} />
