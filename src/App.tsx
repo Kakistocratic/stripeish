@@ -821,7 +821,7 @@ export default function StripeishHero() {
         <section className="hero-section-container section" style={{ background: 'var(--wave-bg)' }}>
 
           {/* ── Text layer: both h1s sit here; canvas background is a sibling below ── */}
-          <div className="section-container hero-section__layout">
+          <div className="section-container hero-section__layout z-50">
             <div className="hero-section__layout-grid">
 
               {/* Background h1 — solid dark text */}
@@ -836,8 +836,8 @@ export default function StripeishHero() {
                 <span className="hero-section__title-copy">I love ThreeJS and this is a thing of beauty. For a techincal breakdown see my github repo</span>
               </h1>
 
-              <div className="actions">
-                <a className="inline-flex items-center gap-2 rounded-md bg-primary px-6 py-2.5 text-sm text-white hover:bg-[#4f46e5] transition-colors" href="#">
+              <div className="actions isolate z-50 flex items-center gap-4">
+                <a className="inline-flex items-center gap-2 rounded-md bg-tertiary px-6 py-2.5 text-base text-white transition-colors" href="#">
                   Github Repo
                 </a>
                 <ThemeSwitcher isAlt={isAlt} onToggle={toggle} />
@@ -893,7 +893,7 @@ export default function StripeishHero() {
                   <em className="hero-section__title-main" style={{ color: '#ffffff' }}>Wireframe Mode so we can see the basic shape of the object</em>
                 </h1>
 
-                <p style={{ color: '#ffffff', fontFamily: 'var(--font-family)', fontSize: '1rem', maxWidth: '640px' }}>
+                <p className="text-white text-lg md:text-2xl mt-3 md:mt-6 max-w-160 font-(--font-family)">
                   The same geometry and vertex shader run here — displacement and twist uniforms produce the undulating shape. How cool is that! No palette texture, no sparkle noise, no post-processing blur. Just the raw mesh edges.
                   In wireframe mode we can see that there is quite a bit of mesh hidden by the folding of the waves and the position of the camera.
                 </p>

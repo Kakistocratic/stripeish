@@ -1,7 +1,5 @@
 "use client";
 
-import React from 'react';
-
 export default function Header() {
   return (
     <header className="w-full flex items-center justify-between px-4 py-3 bg-transparent absolute top-0 left-0 z-30">
